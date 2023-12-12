@@ -6,6 +6,10 @@ import Categories from "./components/Categories";
 import Gallery from "./components/Gallery";
 
 const theme = extendTheme({
+    fonts: {
+        heading: `'Barlow', sans-serif`, // Use 'Barlow' for headings
+        body: `'Barlow', sans-serif`, // Use 'Barlow' for body text
+    },
 });
 
 function App() {
