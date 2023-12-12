@@ -2,12 +2,20 @@ import React, { useEffect, useState } from 'react';
 import {Box, Image, Button, Heading, useDisclosure, WrapItem, Wrap, Flex} from "@chakra-ui/react";
 import { useNavigate, useParams } from 'react-router-dom';
 import PhotoUploadModal from "./AddNewImageModal";
+import ImageViewerModal from "./ImageViewModal";
 
 function Gallery() {
-    const { isOpen, onClose } = useDisclosure();
+    const { isOpen,onOpen, onClose } = useDisclosure();
+
     const navigate = useNavigate();
     const { category } = useParams();
     const [images, setImages] = useState([]);
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+        onOpen();
+    };
 
     useEffect(() => {
         fetch(`http://api.programator.sk/gallery/${category}`)
@@ -15,9 +23,7 @@ function Gallery() {
             .then((data) => setImages(data.images));
     }, [category]);
 
-    const getImageUrl = (image) => {
-        const width = 304;
-        const height = 295;
+    const getImageUrl = (image, width = 304, height = 295) => {
         return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
     };
 
@@ -33,13 +39,28 @@ function Gallery() {
                 <Wrap minChildWidth='120px' spacing="32px">
                     {images && images.map((image) => (
                         <WrapItem key={image.path} boxShadow="md" rounded="lg" overflow="hidden">
-                            <Image src={getImageUrl(image)} alt={`Obrázok ${image.path}`} objectFit="cover" />
+                            <Image
+                                src={getImageUrl(image)}
+                                alt={`Obrázok ${image.path}`}
+                                objectFit="cover"
+                                onClick={() => handleImageClick(image,0,0)}
+                            />
                         </WrapItem>
                     ))}
                     <WrapItem boxShadow="md" rounded="lg" overflow="hidden" width="304px" height="295">
                         <PhotoUploadModal isOpen={isOpen} onClose={onClose} />
                     </WrapItem>
                 </Wrap>
+                {selectedImage && (
+                    <ImageViewerModal
+                        isOpen={isOpen}
+                        onClose={() => {
+                            onClose();
+                            setSelectedImage(null); // Clear the selected image when closing the modal
+                        }}
+                        imageUrl={getImageUrl(selectedImage)}
+                    />
+                )}
             </Box>
         </Flex>
     );
