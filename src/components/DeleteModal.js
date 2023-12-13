@@ -5,40 +5,35 @@ import {
     ModalHeader,
     ModalBody,
     ModalCloseButton,
-    Button, useToast, useDisclosure,
+    Button, useDisclosure, useToast
 } from '@chakra-ui/react';
 import {DeleteIcon} from "@chakra-ui/icons";
+import {deleteRequest} from "../services/Requests";
 
-function DeleteModal( ObjectUrl ) {
-    const toast = useToast();
+function DeleteModal({ objectUrl, callback }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const handleDelete = (category) => {
-        console.log(category);
-        fetch(`http://api.programator.sk/gallery/${category.objectUrl}`,{
-            method  : 'DELETE'
-        }).then((response) => {
-            if (!response.ok){
-                throw new Error();
-            }
+    const toast = new useToast();
+    const handleDelete = async () => {
+        try {
+            await deleteRequest(objectUrl);
+            onClose();
+            callback();
             toast({
                 title: 'Success',
-                description: "Odstránenie bolo úspešné",
+                description: 'Úspešne zmazané',
                 status: 'success',
                 isClosable: true,
             });
-            onClose();
-
-        }).catch(() => {
-                toast({
-                    title: 'Error',
-                    description: "Odstránenie nebolo úspešné",
-                    status: 'error',
-                    isClosable: true,
-                });
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: 'Počas vymazávania nastala chyba',
+                status: 'error',
+                isClosable: true,
             });
-    };
 
+        }
+    };
     return (
         <>
             <Button
@@ -47,7 +42,7 @@ function DeleteModal( ObjectUrl ) {
                 right="4"
                 onClick={onOpen}
                 borderRadius="full"
-                bg="rgba(0, 0, 0,0.2)" // Red background for delete
+                bg="rgba(0, 0, 0,0.2)"
                 color="white"
                 fontSize="14px"
             >
@@ -59,7 +54,7 @@ function DeleteModal( ObjectUrl ) {
                     <ModalHeader fontSize="24px" fontWeight="medium" >Potvrdiť vymazanie</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Button bg="red" textColor="white" width="100%" fontSize="16px" fontWeight="medium" onClick={()=> handleDelete(ObjectUrl)}>
+                        <Button bg="red" textColor="white" width="100%" fontSize="16px" fontWeight="medium" onClick={handleDelete}>
                             Vymazať
                         </Button>
                     </ModalBody>

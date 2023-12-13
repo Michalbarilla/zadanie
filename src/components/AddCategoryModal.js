@@ -13,13 +13,14 @@ import {
     Input, useToast, useDisclosure, Text, Box,
 } from '@chakra-ui/react';
  import {PlusSquareIcon} from '@chakra-ui/icons'
+import {addCategory} from "../services/Requests";
 
-function AddCategoryModal() {
+function AddCategoryModal({callback}) {
     const [categoryName, setCategoryName] = useState('');
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (categoryName.length === 0) {
             toast({
                 title: 'Error',
@@ -29,35 +30,26 @@ function AddCategoryModal() {
             });
             return;
         }
-
-        fetch('http://api.programator.sk/gallery', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ name: categoryName }),
-        })
-            .then(response => {
-                if (!response.ok)
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                return response.json();
-            })
-            .then(() => {
-                onClose();
-                setCategoryName('');
-                toast({
-                    title: 'Success',
-                    description: "Nová kategória bola úspešne vytvorená.",
-                    status: 'success',
-                    isClosable: true,
-                });
-            })
-            .catch(error => {
-                toast({
-                    title: 'Error',
-                    description: "Počas vytvárania novej kategórie nastala chyba.",
-                    status: 'error',
-                    isClosable: true,
-                });
+        try {
+            await addCategory(categoryName);
+            onClose();
+            setCategoryName('');
+            toast({
+                title: 'Success',
+                description: "Nová kategória bola úspešne vytvorená.",
+                status: 'success',
+                isClosable: true,
             });
+            callback();
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: "Počas vytvárania novej kategórie nastala chyba.",
+                status: 'error',
+                isClosable: true,
+            });
+            console.error('Error adding category:', error);
+        }
     };
     return (
         <>

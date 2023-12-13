@@ -21,8 +21,9 @@ import {
 import { CiImageOn } from "react-icons/ci";
 import {useParams} from "react-router-dom";
 import {CloseIcon, PlusSquareIcon} from '@chakra-ui/icons';
+import {uploadImage} from "../services/Requests";
 
-function PhotoUploadModal() {
+function PhotoUploadModal({callback}) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [files, setFiles] = useState([]);
     const [previewUrls, setPreviewUrls] = useState([]);
@@ -81,15 +82,32 @@ function PhotoUploadModal() {
         URL.revokeObjectURL(previewUrls[index]);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (files.length > 0) {
             console.log(files);
 
             for (const file of files) {
                 const formData = new FormData();
                 formData.append('image', file);
-                uploadImageRequest(formData);
+                try {
+                    await uploadImage(category, formData);
+                    toast({
+                        title: 'Success',
+                        description: 'Fotky úspešne nahrané',
+                        status: 'success',
+                        isClosable: true,
+                    });
+                    callback();
+                } catch (error) {
+                    toast({
+                        title: 'Error',
+                        description: 'Počas nahrávania nastala chyba',
+                        status: 'error',
+                        isClosable: true,
+                    });
+                }
             }
+
             setFiles([]);
             setPreviewUrls([]);
             onClose();
@@ -102,31 +120,8 @@ function PhotoUploadModal() {
                 isClosable: true,
             });
         }
-    }
-
-    const uploadImageRequest = (formData) =>{
-        try {
-            fetch('http://api.programator.sk/gallery/'+ category, {
-                method: 'POST',
-                headers: {},
-                body: formData,
-            }).then(()=>
-                toast({
-                    title: 'Success',
-                    description: 'File uploaded successfully!',
-                    status: 'success',
-                    isClosable: true,
-                }))
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            toast({
-                title: 'Error',
-                description: 'There was an error uploading the file.',
-                status: 'error',
-                isClosable: true,
-            });
-        }
     };
+
 
     return (
         <>
