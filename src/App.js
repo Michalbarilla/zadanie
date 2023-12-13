@@ -3,7 +3,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import Categories from "./components/Categories";
-import Gallery from "./components/Gallery";
+import {Gallery} from "./components/Gallery";
 
 const theme = extendTheme({
     fonts: {

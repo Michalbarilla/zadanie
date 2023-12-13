@@ -5,16 +5,16 @@ import PhotoUploadModal from "./AddNewImageModal";
 import ImageViewerModal from "./ImageViewModal";
 import DeleteModal from "./DeleteModal";
 
-function Gallery() {
+export function Gallery() {
     const { isOpen,onOpen, onClose } = useDisclosure();
-
     const navigate = useNavigate();
     const { category } = useParams();
     const [images, setImages] = useState([]);
-
-    const [selectedImage, setSelectedImage] = useState(null);
-    const handleImageClick = (image) => {
-        setSelectedImage(image);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+    //const [selectedImage, setSelectedImage] = useState(null);
+    const handleImageClick = (index) => {
+        setSelectedImageIndex(index);
+        debugger;
         onOpen();
     };
 
@@ -24,12 +24,8 @@ function Gallery() {
             .then((data) => setImages(data.images));
     }, [category]);
 
-    const getImageUrl = (image, width = 304, height = 295) => {
-        return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
-    };
-
     return (
-        <Flex direction="column" align="center" justify="center" h="100vh" bg="gray.100">
+        <Flex direction="column" align="center" justify="center" minH="100vh" bg="gray.100">
             <Box padding="4"  width="full" maxW="2000px">
                 <Heading fontSize="36px" fontWeight="medium" marginBottom="40px"  >
                     Fotogaléria
@@ -38,13 +34,13 @@ function Gallery() {
                     ← {category}
                 </Button>
                 <Wrap minChildWidth='120px' spacing="32px">
-                    {images && images.map((image) => (
+                    {images && images.map((image,index) => (
                         <WrapItem key={image.path} boxShadow="md" rounded="lg" overflow="hidden" position="relative">
                             <Image
                                 src={getImageUrl(image)}
                                 alt={`Obrázok ${image.path}`}
                                 objectFit="cover"
-                                onClick={() => handleImageClick(image,1200,0)}
+                                onClick={() => handleImageClick(index)}
                             />
                             <DeleteModal objectUrl={image.fullpath}/>
                         </WrapItem>
@@ -53,19 +49,22 @@ function Gallery() {
                         <PhotoUploadModal isOpen={isOpen} onClose={onClose} />
                     </WrapItem>
                 </Wrap>
-                {selectedImage && (
+                {selectedImageIndex !== (
                     <ImageViewerModal
                         isOpen={isOpen}
                         onClose={() => {
                             onClose();
-                            setSelectedImage(null); // Clear the selected image when closing the modal
+                            setSelectedImageIndex(null);
                         }}
-                        imageUrl={getImageUrl(selectedImage)}
+                        images={images}
+                        initialIndex={selectedImageIndex}
                     />
                 )}
             </Box>
         </Flex>
     );
 }
-
-export default Gallery;
+export function getImageUrl (image, width = 304, height = 295)
+{
+    return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
+}

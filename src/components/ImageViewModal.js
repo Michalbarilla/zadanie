@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -10,14 +10,24 @@ import {
     Flex,
 } from '@chakra-ui/react';
 import {ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import {getImageUrl} from "./Gallery";
 
-function ImageViewerModal({ isOpen, onClose, imageUrl }) {
+function ImageViewerModal({ isOpen, onClose, images, initialIndex }) {
+    const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+    useEffect(() => {
+            debugger;
+            setCurrentIndex(initialIndex);
+    }, [initialIndex, isOpen]);
+
     const handlePrevious = () => {
-        console.log('Go to previous image');
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+        setCurrentIndex(prevIndex);
     };
 
     const handleNext = () => {
-        console.log('Go to next image');
+        const nextIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+        setCurrentIndex(nextIndex);
     };
 
     return (
@@ -46,7 +56,7 @@ function ImageViewerModal({ isOpen, onClose, imageUrl }) {
                         zIndex="1"
                         onClick={handlePrevious}
                     />
-                    <Image src={imageUrl} maxWidth="80vw" maxHeight="80vh" margin="auto" />
+                    <Image src={getImageUrl(images[currentIndex])} maxWidth="80vw" maxHeight="80vh" margin="auto" />
                     <IconButton
                         aria-label="Next image"
                         icon={<ChevronRightIcon />}

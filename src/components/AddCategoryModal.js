@@ -10,8 +10,9 @@ import {
     Button,
     FormControl,
     FormLabel,
-    Input, useToast, useDisclosure,
+    Input, useToast, useDisclosure, Text, Box,
 } from '@chakra-ui/react';
+ import {PlusSquareIcon} from '@chakra-ui/icons'
 
 function AddCategoryModal() {
     const [categoryName, setCategoryName] = useState('');
@@ -60,7 +61,12 @@ function AddCategoryModal() {
     };
     return (
         <>
-            <Button onClick={onOpen} fontWeight="regular" fontSize="16"  width="100%" height="100%" bg="white">Pridať kategóriu</Button>
+            <Button onClick={onOpen} fontWeight="regular" fontSize="16"  width="100%" height="100%" bg="white">
+               <Box>
+                    <PlusSquareIcon margin="16px" boxSize="24px" color="gray"/>
+                    <Text> Pridať kategóriu </Text>
+               </Box>
+            </Button>
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
                 <ModalContent>

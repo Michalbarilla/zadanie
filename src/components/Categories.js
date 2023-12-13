@@ -1,4 +1,3 @@
-import logo from '../logo.svg';
 import {Box, Heading, Image, useDisclosure, Wrap, WrapItem, Flex, Text, Badge} from "@chakra-ui/react";
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
@@ -16,8 +15,8 @@ function Categories(){
             .then((response) => response.json())
             .then((data) => {
                 setCategories(data.galleries);
-                data.galleries.forEach((gallery) => {
-                    fetch(`http://api.programator.sk/gallery/${gallery.path}`)
+                data.galleries.forEach((category) => {
+                    fetch(`http://api.programator.sk/gallery/${(category.path)}`)
                         .then((response) => {
                             if (response.status === 404){
                                 throw new Error();
@@ -27,14 +26,11 @@ function Categories(){
                         .then((imageData) => {
                             setImageCounts((prev) => ({
                                 ...prev,
-                                [gallery.name]: imageData.images.length,
+                                [category.name]: imageData.images.length,
                             }));
                         })
                         .catch(() => {
-                            setImageCounts((prev) => ({
-                                ...prev,
-                                [gallery.name]: 0,
-                            }));
+                            setCategories(prevCategories => prevCategories.filter(cat => cat.path !== category.path));
                         });
                 });
             })
@@ -50,12 +46,12 @@ function Categories(){
         return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
         }
         catch{
-                return logo;
+                return 'no-image-found.png';
         }
     };
 
     return (
-        <Flex direction="column" align="center" justify="center" h="100vh" bg="gray.100">
+        <Flex direction="column" align="center" justify="center" minH="100vh" bg="gray.100">
             <Box padding="4" width="full" maxW="2000px">
                 <Heading fontSize="36px" fontWeight="medium" marginBottom="40px"  >
                     Fotogaléria

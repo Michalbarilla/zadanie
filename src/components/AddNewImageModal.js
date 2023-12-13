@@ -16,11 +16,11 @@ import {
     useDisclosure,
     Image,
     Wrap,
-    WrapItem
+    WrapItem, Box
 } from '@chakra-ui/react';
-import { FaFileUpload } from 'react-icons/fa';
+import { CiImageOn } from "react-icons/ci";
 import {useParams} from "react-router-dom";
-import { CloseIcon } from '@chakra-ui/icons';
+import {CloseIcon, PlusSquareIcon} from '@chakra-ui/icons';
 
 function PhotoUploadModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -130,7 +130,10 @@ function PhotoUploadModal() {
 
     return (
         <>
-            <Button onClick={onOpen} fontWeight="regular" fontSize="16" width="100%" height="100%" bg="white">Pridať fotky</Button>
+            <Button onClick={onOpen} fontWeight="regular" fontSize="16" width="100%" height="100%" bg="white"><Box>
+                <PlusSquareIcon margin="16px" boxSize="24px" color="gray"/>
+                <Text> Pridať fotky</Text>
+            </Box></Button>
             <Modal isOpen={isOpen} onClose={handleClose} isCentered>
                 <ModalOverlay />
                 <ModalContent>
@@ -150,7 +153,7 @@ function PhotoUploadModal() {
                                 onClick={openFileSelector}
                             >
                                 <VStack spacing={2}>
-                                    <FaFileUpload size="24px" />
+                                    <CiImageOn  size="24px" />
                                     <Text>Sem presunte fotky alebo kliknite pre vybranie súborov</Text>
                                 </VStack>
                                 <Input
