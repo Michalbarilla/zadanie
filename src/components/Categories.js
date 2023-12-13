@@ -1,28 +1,59 @@
 import logo from '../logo.svg';
-import {Box, Heading, Image, useDisclosure, Wrap, WrapItem, Flex, Text} from "@chakra-ui/react";
+import {Box, Heading, Image, useDisclosure, Wrap, WrapItem, Flex, Text, Badge} from "@chakra-ui/react";
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import AddCategoryModal from "./AddCategoryModal";
+import DeleteModal from "./DeleteModal";
 
 function Categories(){
     const [categories, setCategories] = useState([]);
+    const [imageCounts, setImageCounts] = useState({});
     const { isOpen, onClose } = useDisclosure();
 
-    useEffect(() => {
+
+    const fetchCategories = () => {
         fetch('http://api.programator.sk/gallery')
             .then((response) => response.json())
-            .then((data) => setCategories(data.galleries));
-    },[]);
+            .then((data) => {
+                setCategories(data.galleries);
+                data.galleries.forEach((gallery) => {
+                    fetch(`http://api.programator.sk/gallery/${gallery.path}`)
+                        .then((response) => {
+                            if (response.status === 404){
+                                throw new Error();
+                            }
+                            return response.json();
+                        })
+                        .then((imageData) => {
+                            setImageCounts((prev) => ({
+                                ...prev,
+                                [gallery.name]: imageData.images.length,
+                            }));
+                        })
+                        .catch(() => {
+                            setImageCounts((prev) => ({
+                                ...prev,
+                                [gallery.name]: 0,
+                            }));
+                        });
+                });
+            })
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, [isOpen, onClose]);
     const getImageUrl = (image) => {
         try{
         const width = 304;
         const height = 228;
-    return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
-    }
-    catch{
-            return logo;
-    }
+        return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
+        }
+        catch{
+                return logo;
+        }
     };
+
     return (
         <Flex direction="column" align="center" justify="center" h="100vh" bg="gray.100">
             <Box padding="4" width="full" maxW="2000px">
@@ -32,23 +63,36 @@ function Categories(){
                 <Text fontSize="18px" fontWeight="medium" marginBottom="40px">Kategórie</Text>
                 <Wrap minChildWidth='304px' spacing="30px">
                     {categories && categories.map((category) => (
-                        <Link to={`/gallery/${category.name}`} key={category.path}>
-                            <WrapItem width="304px" height="295px" boxShadow="md" rounded="lg" overflow="hidden" bg="white">
-                                <Box width="100%" height="100%" display="flex" flexDirection="column">
-                                    <Image src={getImageUrl(category.image)} alt={category.name} height="228px" objectFit="cover"/>
-                                    <Box p="6" flexGrow="1">
-                                        <Heading fontWeight="regular" fontSize="16" size="md" marginBottom="2" align="center">
-                                            {decodeURIComponent(category.name)}
-                                        </Heading>
-                                        <Box as="span" color="gray.600" fontSize="sm">
-                                            {category.count}
+                            <WrapItem width="304px" height="295px" boxShadow="md"  overflow="hidden" bg="white">
+                                <Box width="100%" height="100%" display="flex" flexDirection="column" position="relative">
+                                    <Link to={`/gallery/${category.name}`} key={category.path}>
+                                        <Image src={getImageUrl(category.image)} alt={category.name} height="228px" objectFit="cover"/>
+                                        <Box p="6" flexGrow="1">
+                                            <Heading fontWeight="regular" fontSize="16" size="md" marginBottom="2" align="center">
+                                                {decodeURIComponent(category.name)}
+                                            </Heading>
                                         </Box>
-                                    </Box>
+                                    </Link>
+                                    <Badge
+                                        position="absolute"
+                                        top="4"
+                                        left="4"
+                                        px="2"
+                                        py="1"
+                                        borderRadius="full"
+                                        bg="rgba(0, 0, 0,0.2)"
+                                        color="white"
+                                        fontSize="12px"
+                                        fontWeight="medium"
+                                        textTransform="lowercase"
+                                    >
+                                        {imageCounts[category.name]} fotiek
+                                    </Badge>
+                                    <DeleteModal objectUrl={category.path}/>
                                 </Box>
                             </WrapItem>
-                        </Link>
                     ))}
-                    <WrapItem width="304px" height="295px" boxShadow="md" rounded="lg" overflow="hidden" bg="white">
+                    <WrapItem width="304px" height="295px" boxShadow="md"  overflow="hidden" >
                         <AddCategoryModal isOpen={isOpen} onClose={onClose} />
                     </WrapItem>
                 </Wrap>

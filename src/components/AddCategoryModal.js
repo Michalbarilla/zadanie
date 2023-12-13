@@ -60,8 +60,8 @@ function AddCategoryModal() {
     };
     return (
         <>
-            <Button onClick={onOpen} fontWeight="regular" fontSize="16"  width="100%" height="100%">Pridať kategóriu</Button>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Button onClick={onOpen} fontWeight="regular" fontSize="16"  width="100%" height="100%" bg="white">Pridať kategóriu</Button>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader fontSize="24px" fontWeight="medium" >Pridať kategóriu</ModalHeader>

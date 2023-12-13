@@ -8,21 +8,16 @@ import {
     Image,
     IconButton,
     Flex,
-    Box,
-    useDisclosure
 } from '@chakra-ui/react';
-import { CloseIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import {ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 function ImageViewerModal({ isOpen, onClose, imageUrl }) {
-    // Placeholder functions for navigating images
     const handlePrevious = () => {
         console.log('Go to previous image');
-        // Implement functionality to go to the previous image
     };
 
     const handleNext = () => {
         console.log('Go to next image');
-        // Implement functionality to go to the next image
     };
 
     return (

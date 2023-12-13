@@ -130,8 +130,8 @@ function PhotoUploadModal() {
 
     return (
         <>
-            <Button onClick={onOpen} fontWeight="regular" fontSize="16" width="100%" height="100%">Pridať fotky</Button>
-            <Modal isOpen={isOpen} onClose={handleClose}>
+            <Button onClick={onOpen} fontWeight="regular" fontSize="16" width="100%" height="100%" bg="white">Pridať fotky</Button>
+            <Modal isOpen={isOpen} onClose={handleClose} isCentered>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Pridať fotky</ModalHeader>
