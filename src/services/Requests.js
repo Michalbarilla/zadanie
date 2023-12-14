@@ -1,3 +1,4 @@
+
 export function getImageUrl (image, width=304,height=228) {
     try{
         return `http://api.programator.sk/images/${width}x${height}/${image.fullpath}`;
@@ -46,8 +47,8 @@ export async function fetchGalleries(){
     return response.json();
 }
 
-export async function fetchImageCount(categoryPath){
-    const response = await fetch(`http://api.programator.sk/gallery/${categoryPath}`);
+export async function fetchImageCount(category){
+    const response = await fetch(`http://api.programator.sk/gallery/${category}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
@@ -66,4 +67,4 @@ export async function addCategory(categoryName){
     }
 
     return response.json();
-};
+}

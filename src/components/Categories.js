@@ -28,6 +28,15 @@ function Categories(){
             console.error('Error fetching categories:', error);
         }
     };
+    function getPhotoLabel(count) {
+        if (count === 1) {
+            return 'fotka';
+        } else if (count > 1 && count < 5) {
+            return 'fotky';
+        } else {
+            return 'fotiek';
+        }
+    }
 
     useEffect(() => {
         fetchCategories();
@@ -35,7 +44,7 @@ function Categories(){
 
     return (
         <Flex direction="column" align="center" justify="center" minH="100vh" bg="gray.100">
-            <Box padding="4" width="full" maxW="2000px">
+            <Box padding="4" width="full" maxW="1700px">
                 <Heading fontSize="36px" fontWeight="medium" marginBottom="40px"  >
                     Fotogaléria
                 </Heading>
@@ -65,7 +74,7 @@ function Categories(){
                                         fontWeight="medium"
                                         textTransform="lowercase"
                                     >
-                                        {imageCounts[category.name]} fotiek
+                                        {imageCounts[category.name]} {getPhotoLabel(imageCounts[category.name])}
                                     </Badge>
                                     <DeleteModal objectUrl={category.path} callback={()=>fetchCategories()}/>
                                 </Box>

@@ -157,6 +157,7 @@ function PhotoUploadModal({callback}) {
                                     multiple
                                     onChange={handleFilesChange}
                                     ref={inputRef}
+                                    accept="image/*"
                                 />
                             </Center>
                             <Wrap spacing="10px" justify="center">

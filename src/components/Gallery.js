@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Box, Image, Button, Heading, useDisclosure, WrapItem, Wrap, Flex} from "@chakra-ui/react";
 import { useNavigate, useParams } from 'react-router-dom';
 import PhotoUploadModal from "./AddNewImageModal";
@@ -12,27 +12,27 @@ export function Gallery() {
     const {category} = useParams();
     const [images, setImages] = useState([]);
     const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-    const handleImageClick = (index) => {
-        setSelectedImageIndex(index);
-        debugger;
-        onOpen();
-    };
-    const fetchImages = async () => {
+
+    const fetchImages = useCallback(async () => {
         try {
             const fetchedImages = await getImages(category);
             setImages(fetchedImages);
         } catch (error) {
             console.error("Error fetching images:", error);
         }
-    };
+    }, [category]); // `category` is a dependency for useCallback
 
     useEffect(() => {
         fetchImages();
-    }, [category]);
+    }, [fetchImages]);
+    const handleImageClick = (index) => {
+        setSelectedImageIndex(index);
+        onOpen();
+    };
 
     return (
         <Flex direction="column" align="center" justify="center" minH="100vh" bg="gray.100">
-            <Box padding="4" width="full" maxW="2000px">
+            <Box padding="4" width="full" maxW="1700px">
                 <Heading fontSize="36px" fontWeight="medium" marginBottom="40px">
                     Fotogaléria
                 </Heading>
@@ -44,7 +44,7 @@ export function Gallery() {
                     {images && images.map((image, index) => (
                         <WrapItem key={image.path} boxShadow="md" rounded="lg" overflow="hidden" position="relative">
                             <Image
-                                src={getImageUrl(image)}
+                                src={getImageUrl(image,304,295)}
                                 alt={`Obrázok ${image.path}`}
                                 objectFit="cover"
                                 onClick={() => handleImageClick(index)}

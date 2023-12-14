@@ -21,6 +21,10 @@ function AddCategoryModal({callback}) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleSave = async () => {
+        // Define a regular expression that matches unwanted characters
+        // This example allows only letters (both cases), numbers, spaces, and hyphens
+        const validNamePattern = /^[a-zA-Z0-9 -]+$/;
+
         if (categoryName.length === 0) {
             toast({
                 title: 'Error',
@@ -29,7 +33,16 @@ function AddCategoryModal({callback}) {
                 isClosable: true,
             });
             return;
+        } else if (!validNamePattern.test(categoryName)) {
+            toast({
+                title: 'Error',
+                description: "Názov kategórie obsahuje nepovolené znaky.",
+                status: 'error',
+                isClosable: true,
+            });
+            return;
         }
+
         try {
             await addCategory(categoryName);
             onClose();
