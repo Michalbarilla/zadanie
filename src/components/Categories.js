@@ -28,7 +28,7 @@ function Categories(){
             console.error('Error fetching categories:', error);
         }
     };
-    function getPhotoLabel(count) {
+    const getPhotoLabel = (count) => {
         if (count === 1) {
             return 'fotka';
         } else if (count > 1 && count < 5) {
@@ -44,7 +44,7 @@ function Categories(){
 
     return (
         <Flex direction="column" align="center" justify="center" minH="100vh" bg="gray.100">
-            <Box padding="4" width="full" maxW="1700px">
+            <Box padding="4" width="full" maxW="93vw">
                 <Heading fontSize="36px" fontWeight="medium" marginBottom="40px"  >
                     Fotogaléria
                 </Heading>

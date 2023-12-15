@@ -16,16 +16,15 @@ function ImageViewerModal({ isOpen, onClose, images, initialIndex }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-            debugger;
             setCurrentIndex(initialIndex);
     }, [initialIndex]);
 
     const handleImageLoad = () => {
-        setIsLoading(false); // Image has loaded
+        setIsLoading(false);
     };
 
     const handleImageError = () => {
-        setIsLoading(false); // Image failed to load, but loading is done
+        setIsLoading(false);
     };
 
     const handlePrevious = () => {
@@ -43,7 +42,7 @@ function ImageViewerModal({ isOpen, onClose, images, initialIndex }) {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
             <ModalOverlay />
-            <ModalContent maxWidth="none" background="transparent" boxShadow="none">
+            <ModalContent maxWidth="none" backgroundColor="transparent" boxShadow="none">
                 <Flex align="center" justify="center" height="100vh" position="relative">
                     <Box
                         position="absolute"
@@ -53,18 +52,22 @@ function ImageViewerModal({ isOpen, onClose, images, initialIndex }) {
                         bottom="0"
                         bg="rgba(0, 0, 0, 0.5)"
                         zIndex="0"
-                    />
+                    /><Box position="relative" width="max-content">
                     <IconButton
                         aria-label="Previous image"
                         icon={<ChevronLeftIcon />}
                         position="absolute"
-                        left="0"
+                        left="-5"
                         margin="auto"
-                        height="fit-content"
+                        width="40px"
+                        height="40px"
                         top="0"
                         bottom="0"
                         zIndex="1"
+                        borderRadius="full"
+                        bg="white"
                         onClick={handlePrevious}
+                        style={{ display: isLoading ? 'none' : 'block' }}
                     />
                     {isLoading && (
                         <Flex justify="center" align="center" position="absolute" top="0" right="0" bottom="0" left="0" zIndex="1">
@@ -85,21 +88,31 @@ function ImageViewerModal({ isOpen, onClose, images, initialIndex }) {
                         aria-label="Next image"
                         icon={<ChevronRightIcon />}
                         position="absolute"
-                        right="0"
+                        right="-5"
                         margin="auto"
-                        height="fit-content"
                         top="0"
                         bottom="0"
                         zIndex="1"
+                        borderRadius="full"
+                        bg="white"
+                        width="40px"
+                        height="40px"
                         onClick={handleNext}
+                        style={{ display: isLoading ? 'none' : 'block' }}
                     />
                     <ModalCloseButton
                         position="absolute"
-                        right="2"
-                        top="2"
-                        color="white"
+                        right="-3"
+                        top="-3"
+                        color="black"
                         zIndex="2"
+                        borderRadius="full"
+                        width="40px"
+                        height="40px"
+                        bg="white"
+                        style={{ display: isLoading ? 'none' : 'block' }}
                     />
+                </Box>
                 </Flex>
             </ModalContent>
         </Modal>

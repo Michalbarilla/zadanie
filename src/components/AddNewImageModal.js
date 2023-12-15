@@ -84,8 +84,6 @@ function PhotoUploadModal({callback}) {
 
     const handleSubmit = async () => {
         if (files.length > 0) {
-            console.log(files);
-
             for (const file of files) {
                 const formData = new FormData();
                 formData.append('image', file);
@@ -149,7 +147,7 @@ function PhotoUploadModal({callback}) {
                             >
                                 <VStack spacing={2}>
                                     <CiImageOn  size="24px" />
-                                    <Text>Sem presunte fotky alebo kliknite pre vybranie súborov</Text>
+                                    <Text>Sem presuňte fotky alebo kliknite pre vybranie súborov</Text>
                                 </VStack>
                                 <Input
                                     type="file"

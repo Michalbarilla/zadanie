@@ -20,14 +20,14 @@ function DeleteModal({ objectUrl, callback }) {
             callback();
             toast({
                 title: 'Success',
-                description: 'Úspešne zmazané',
+                description: 'Úspešne zmazané.',
                 status: 'success',
                 isClosable: true,
             });
         } catch (error) {
             toast({
                 title: 'Error',
-                description: 'Počas vymazávania nastala chyba',
+                description: 'Počas vymazávania nastala chyba.',
                 status: 'error',
                 isClosable: true,
             });

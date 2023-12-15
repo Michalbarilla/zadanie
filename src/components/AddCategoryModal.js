@@ -21,8 +21,6 @@ function AddCategoryModal({callback}) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleSave = async () => {
-        // Define a regular expression that matches unwanted characters
-        // This example allows only letters (both cases), numbers, spaces, and hyphens
         const validNamePattern = /^[a-zA-Z0-9 -]+$/;
 
         if (categoryName.length === 0) {
@@ -57,7 +55,7 @@ function AddCategoryModal({callback}) {
         } catch (error) {
             toast({
                 title: 'Error',
-                description: "Počas vytvárania novej kategórie nastala chyba.",
+                description: "V galérii už existuje kategória s rovnakým názvom.",
                 status: 'error',
                 isClosable: true,
             });
